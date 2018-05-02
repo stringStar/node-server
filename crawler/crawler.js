@@ -126,7 +126,7 @@ function getBTSOPromis(search, skip, limit) {
     const page = skip / 30 + 1;
     let BTSO = encodeURI(`https://btso.pw/search/${search}/page/${page}`); 
     var headers = {
-        // 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
     var options = {
