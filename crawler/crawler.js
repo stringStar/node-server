@@ -133,7 +133,8 @@ function getBTSOPromis(search, skip, limit) {
         uri : BTSO,
         headers,
         gzip:true
-    }
+    };
+    console.log('await BTSO Promise111111')
     return new Promise((result, rej) => {
             getPageHref.queue({
                 uri : BTSO,
@@ -145,7 +146,7 @@ function getBTSOPromis(search, skip, limit) {
                         console.error(err);
                         return false;
                     } else {
-                        console.log(res);
+                        console.log('has BTSO Promise 111111')
                         let $ = res.$;
                         if (typeof $ == 'function') {
                             const details = $('.data-list .row');

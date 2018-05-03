@@ -31,6 +31,7 @@ class Crawler {
                     break;
                 case 'BTSO':
                     let btso = await getBTSO(search, skip, limit);
+                    console.log('await req111111')
                     data = {
                         data: btso,
                         all_size: btso.length < 30 ? Number(skip) + 20 : Number(skip) + 31
