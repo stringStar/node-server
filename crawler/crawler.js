@@ -5,7 +5,7 @@ var request = require('request');
 var superagent = require('superagent');
 
 const getPageHref = new Crawler({
-    maxConnections: 100,
+    maxConnections: 10,
     forceUTF8: true,
 })
 
@@ -21,9 +21,11 @@ const getDiaosiPromise = (search, skip, limit) => { return [1,2].map(v => {
         let DIAOSISOU = encodeURI(`http://www.diaosisou.org/list/${search}/${(skip/10)+v}`);
         return new Promise((reslut, rej) => {
             let info = [];
+            console.log('await dss promise')
             getPageHref.queue({
                 uri: DIAOSISOU,
-                callback: function (error, res) {
+                callback: function (error, res,done) {
+                    console.log('dss has promise')
                     if (error) {
                         console.error(error);
                         rej(error);
@@ -31,7 +33,7 @@ const getDiaosiPromise = (search, skip, limit) => { return [1,2].map(v => {
                     } else {
                         var $ = res.$;
                         const dom = $('.mlist li');
-                        const allSize = decode($('.rststat').html()).match(/[0-9]+/)[0];
+                        const allSize = decode($('.rststat').html()) && decode($('.rststat').html()).match(/[0-9]+/)[0];
                         dom.each((v) => {
                             const $this = dom.eq(v);
                             let item = {};
@@ -48,6 +50,7 @@ const getDiaosiPromise = (search, skip, limit) => { return [1,2].map(v => {
                         })
                         reslut({info, all_size: allSize});
                     }
+                    done();
                 }
             })
         })
@@ -57,9 +60,11 @@ const getCNTKittyPromise = (search, skip, limit) => [1,2].map((v)=> {
     const page = skip / 10 + v;
     let CNTORRENTKITTY = encodeURI(`http://cntorrentkitty.com/tk/${search}/${page}-0-0.html`)
     return new Promise((reslut, rej) => {
+        console.log('await cntk  promise')
         getPageHref.queue({
             uri: CNTORRENTKITTY,
-            callback: function (err, res) {
+            callback: function (err, res, done) {
+                console.log('cntk has promise')
                 if (err) {
                     console.error(err);
                     rej(err);
@@ -105,6 +110,7 @@ const getCNTKittyPromise = (search, skip, limit) => [1,2].map((v)=> {
                     })
                     reslut({info, all_size: decode(allSize) || 0});
                 }
+                done();
             }
         })
     })
@@ -119,7 +125,7 @@ export async function  getCNTKitty(search, skip, limit) {
     return Promise.all(getCNTKittyPromise(search, skip, limit));
 }
  export  function getBTSO(search, skip, limit) {
-    return getBTSOPromis(search, skip, limit).catch(e => console.log(e));
+    return getBTSOPromis(search, skip, limit);
 }
 function getBTSOPromis(search, skip, limit) {
     const info = [];
@@ -140,7 +146,7 @@ function getBTSOPromis(search, skip, limit) {
                 uri : BTSO,
                 headers,
                 gzip:true,
-                callback: function(err, res) {
+                callback: function(err, res, done) {
                     if(err) {
                         rej(err)
                         console.error(err);
@@ -175,6 +181,8 @@ function getBTSOPromis(search, skip, limit) {
                         }
 
                     }
+                    done();
+                    
                 }
             })
        

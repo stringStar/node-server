@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const timeout = require('connect-timeout');
 
 var indexRouter = require('./routes/index');
 import usersRouter from './routes/users'
@@ -12,6 +13,8 @@ import db from './db';
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+app.use(timeout(12000));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +29,12 @@ app.use('/', indexRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+app.use(haltOnTimedout);
+
+
+function haltOnTimedout(req, res, next){
+  if (!req.timedout) next()
+}
 
 // error handler
 app.use(function(err, req, res, next) {

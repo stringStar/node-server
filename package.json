@@ -6,6 +6,7 @@
     "start": "node  ./bin/www.mjs  --harmony_destructuring"
   },
   "dependencies": {
+    "connect-timeout": "^1.9.0",
     "cookie-parser": "~1.4.3",
     "crawler": "^1.1.2",
     "debug": "~2.6.9",
